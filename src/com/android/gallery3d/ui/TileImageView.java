@@ -281,7 +281,8 @@ public class TileImageView extends GLView {
   	  				isGifPic = false;
   				}
   			} else {
-  	  			if(!mFilmMode && mimeType != null && mimeType.startsWith("image/")){
+  	  			if(!mFilmMode && mimeType != null && mimeType.startsWith("image/")
+  	  					&& mimeType.endsWith("bmp")){
   	  				if(mTask != null){
   	  					mTask.cancel();
   	  				}
@@ -428,7 +429,7 @@ public class TileImageView extends GLView {
         // We want to keep one more tile level as texture in addition to what
         // we use for display. So it can be faster when the scale moves to the
         // next level. We choose a level closer to the current scale.
-        if (mLevel != mLevelCount && !(mModel instanceof PhotoPage.Model)) {
+        if (mLevel != mLevelCount) {
             Rect range = mTileRange;
             getRange(range, centerX, centerY, mLevel, scale, rotation);
             mOffsetX = Math.round(width / 2f + (range.left - centerX) * scale);
@@ -692,30 +693,30 @@ public class TileImageView extends GLView {
             }
 		}else{
 			try {
-//				if (level != mLevelCount && !isScreenNailAnimating()) {
-//					if (mScreenNail != null) {
-//						mScreenNail.noDraw();
-//					}
-//
-//					int size = (sTileSize << level);
-//					float length = size * mScale;
-//					Rect r = mTileRange;
-//
-//					for (int ty = r.top, i = 0; ty < r.bottom; ty += size, i++) {
-//						float y = mOffsetY + i * length;
-//						for (int tx = r.left, j = 0; tx < r.right; tx += size, j++) {
-//							float x = mOffsetX + j * length;
-//							drawTile(canvas, tx, ty, level, x, y, length);
-//						}
-//					}
-//				} else if (mScreenNail != null) {
+				if (level != mLevelCount && !isScreenNailAnimating()) {
+					if (mScreenNail != null) {
+						mScreenNail.noDraw();
+					}
+
+					int size = (sTileSize << level);
+					float length = size * mScale;
+					Rect r = mTileRange;
+
+					for (int ty = r.top, i = 0; ty < r.bottom; ty += size, i++) {
+						float y = mOffsetY + i * length;
+						for (int tx = r.left, j = 0; tx < r.right; tx += size, j++) {
+							float x = mOffsetX + j * length;
+							drawTile(canvas, tx, ty, level, x, y, length);
+						}
+					}
+				} else if (mScreenNail != null) {
 					mScreenNail.draw(canvas, mOffsetX, mOffsetY,
 							Math.round(mImageWidth * mScale),
 							Math.round(mImageHeight * mScale));
 					if (isScreenNailAnimating()) {
 						invalidate();
 					}
-//				}
+				}
 			} finally {
 				if (flags != 0)
 					canvas.restore();
